@@ -5,7 +5,7 @@ from sklearn.feature_extraction.text import CountVectorizer
 import pandas as pd
 from bson import ObjectId
 import math
-
+import uvicorn
 # Inicializar la aplicación FastAPI
 app = FastAPI()
 
@@ -76,8 +76,19 @@ def recommend_products(product_id):
     return products_to_json(closest_products.to_dict('records'))
 
 
+
+@app.get("/", tags=["Root"])
+async def read_root():
+  return { 
+    "message": "Welcome to my notes application, use the /docs route to proceed"
+   }
+
 # Definir la ruta para la recomendación de productos similares
 @app.get("/recommend_products/{product_id}")
 def get_recommendations(product_id: str):
     recommendations = recommend_products(product_id)
     return recommendations
+
+
+if __name__ == "__main__":
+  uvicorn.run("server.api:app", host="0.0.0.0", port=8000, reload=True)
