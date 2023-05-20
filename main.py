@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from pymongo import MongoClient
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import CountVectorizer
@@ -6,10 +7,24 @@ import pandas as pd
 from bson import ObjectId
 import math
 import uvicorn
-# Inicializar la aplicación FastAPI
+
 app = FastAPI()
 
-# Conectar con la base de datos de MongoDB
+# CORS middleware settings
+origins = [
+    "http://localhost:5173",  
+    "https://www.douvery.com",  
+   
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 client = MongoClient("mongodb+srv://germys:LWBVI45dp8jAIywv@douvery.0oma0vw.mongodb.net/Production")
 db = client["Production"]
 collection = db["products"]
